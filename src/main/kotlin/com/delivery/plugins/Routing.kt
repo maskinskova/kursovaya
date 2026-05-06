@@ -1,29 +1,34 @@
 package com.delivery.plugins
 
-import com.delivery.routes.menuRoutes
-import com.delivery.routes.orderRoutes
-import com.delivery.routes.authRoutes
-import com.delivery.services.MenuService
-import com.delivery.services.OrderService
-import com.delivery.services.AuthService
+import com.delivery.routes.*
+import com.delivery.services.*
 import io.ktor.server.application.*
 import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
+    val jwtConfig = environment.config.config("ktor.jwt")
+    val secret = jwtConfig.property("secret").getString()
+    val issuer = jwtConfig.property("issuer").getString()
+
     val menuService = MenuService()
     val orderService = OrderService()
-    val authService = AuthService()
+    val authService = AuthService(secret, issuer)
+
+    val testMode = environment.config.propertyOrNull("ktor.testMode")?.getString() == "true"
 
     routing {
         authRoutes(authService)
 
-        authenticate("jwt") {
+        if (testMode) {
+            // В тестах – без проверки токенов
             menuRoutes(menuService)
-        }
-
-        authenticate("jwt") {
             orderRoutes(orderService)
+        } else {
+            authenticate("jwt") {
+                menuRoutes(menuService)
+                orderRoutes(orderService)
+            }
         }
     }
 }

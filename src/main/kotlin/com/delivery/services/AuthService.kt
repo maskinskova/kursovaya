@@ -8,9 +8,10 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import java.util.*
 
-class AuthService {
-    private val jwtSecret = "my-secret-key-change-me-in-production"
-    private val jwtIssuer = "ktor-delivery"
+class AuthService(
+    private val jwtSecret: String,
+    private val jwtIssuer: String
+) {
     private val jwtAlgorithm = Algorithm.HMAC256(jwtSecret)
 
     suspend fun register(request: RegisterRequest): User = newSuspendedTransaction {

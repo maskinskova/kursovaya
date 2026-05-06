@@ -39,6 +39,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-kotlin-datetime:0.55.0")
     implementation("org.postgresql:postgresql:42.7.3")
     implementation("com.zaxxer:HikariCP:5.1.0")
+    testImplementation("com.h2database:h2:2.2.224")
 
     // Логирование
     implementation("ch.qos.logback:logback-classic:1.5.8")

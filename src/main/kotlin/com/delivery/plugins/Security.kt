@@ -7,12 +7,14 @@ import io.ktor.server.auth.*
 import io.ktor.server.auth.jwt.*
 
 fun Application.configureSecurity() {
-    val jwtSecret = "my-secret-key-change-me-in-production"
-    val jwtIssuer = "ktor-delivery"
+    val jwtConfig = environment.config.config("ktor.jwt")
+    val jwtSecret = jwtConfig.property("secret").getString()
+    val jwtIssuer = jwtConfig.property("issuer").getString()
+    val realm = jwtConfig.property("realm").getString()
 
     install(Authentication) {
         jwt("jwt") {
-            realm = "ktor-delivery"
+            this.realm = realm
             verifier(
                 JWT.require(Algorithm.HMAC256(jwtSecret))
                     .withIssuer(jwtIssuer)
