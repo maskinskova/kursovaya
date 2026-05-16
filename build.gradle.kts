@@ -25,6 +25,7 @@ dependencies {
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("com.auth0:java-jwt:4.4.0")
 
+
     // Сериализация
     implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.1")
@@ -57,3 +58,4 @@ java {
 kotlin {
     jvmToolchain(21)
 }
+
