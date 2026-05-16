@@ -7,28 +7,21 @@ import io.ktor.server.auth.*
 import io.ktor.server.routing.*
 
 fun Application.configureRouting() {
+    val environment = this.environment
     val jwtConfig = environment.config.config("ktor.jwt")
-    val secret = jwtConfig.property("secret").getString()
-    val issuer = jwtConfig.property("issuer").getString()
+    val jwtSecret = jwtConfig.property("secret").getString()
+    val jwtIssuer = jwtConfig.property("issuer").getString()
 
     val menuService = MenuService()
     val orderService = OrderService()
-    val authService = AuthService(secret, issuer)
-
-    val testMode = environment.config.propertyOrNull("ktor.testMode")?.getString() == "true"
+    val authService = AuthService(jwtSecret, jwtIssuer)
 
     routing {
         authRoutes(authService)
 
-        if (testMode) {
-            // В тестах – без проверки токенов
+        authenticate("jwt") {
             menuRoutes(menuService)
             orderRoutes(orderService)
-        } else {
-            authenticate("jwt") {
-                menuRoutes(menuService)
-                orderRoutes(orderService)
-            }
         }
     }
 }
