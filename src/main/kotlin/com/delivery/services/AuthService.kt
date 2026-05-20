@@ -14,9 +14,9 @@ class AuthService(
 ) {
     private val jwtAlgorithm = Algorithm.HMAC256(jwtSecret)
 
-    suspend fun register(request: RegisterRequest): User = newSuspendedTransaction {
+    suspend fun register(request: RegisterRequest): User? = newSuspendedTransaction {
         val existing = Users.selectAll().where { Users.email eq request.email }.count()
-        if (existing > 0) throw IllegalStateException("Email уже занят")
+        if (existing > 0) return@newSuspendedTransaction null
 
         val hashedPassword = BCrypt.withDefaults().hashToString(12, request.password.toCharArray())
 

@@ -14,12 +14,12 @@ fun Route.authRoutes(authService: AuthService) {
     route("/auth") {
         // POST /auth/register
         post("/register") {
-            try {
-                val request = call.receive<RegisterRequest>()
-                val user = authService.register(request)
+            val request = call.receive<RegisterRequest>()
+            val user = authService.register(request)
+            if (user != null) {
                 call.respond(HttpStatusCode.Created, user)
-            } catch (e: IllegalStateException) {
-                call.respond(HttpStatusCode.Conflict, mapOf("error" to e.message))
+            } else {
+                call.respond(HttpStatusCode.Conflict, mapOf("error" to "Email уже занят"))
             }
         }
 

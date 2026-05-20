@@ -33,7 +33,7 @@ dependencies {
     // Корутины и Flow
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.9.0")
 
-    // База данных (Exposed + PostgreSQL)
+    // База данных
     implementation("org.jetbrains.exposed:exposed-core:0.55.0")
     implementation("org.jetbrains.exposed:exposed-dao:0.55.0")
     implementation("org.jetbrains.exposed:exposed-jdbc:0.55.0")
@@ -48,6 +48,7 @@ dependencies {
     // Тесты
     testImplementation("io.ktor:ktor-server-test-host:3.0.0")
     testImplementation("org.jetbrains.kotlin:kotlin-test:2.0.0")
+    testImplementation("io.ktor:ktor-client-content-negotiation:3.0.0")
 }
 java {
     toolchain {

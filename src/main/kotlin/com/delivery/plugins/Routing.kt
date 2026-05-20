@@ -18,10 +18,8 @@ fun Application.configureRouting() {
     routing {
         authRoutes(authService)
 
-        // Меню: GET открыт, POST проверяет ADMIN внутри MenuRoutes.kt
         menuRoutes(menuService)
 
-        // Заказы: требуют JWT
         authenticate("jwt") {
             orderRoutes(orderService)
         }

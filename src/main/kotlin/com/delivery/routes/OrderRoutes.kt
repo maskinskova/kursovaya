@@ -23,7 +23,7 @@ fun Route.orderRoutes(orderService: OrderService) {
         // POST /orders
         post {
             val principal = call.principal<JWTPrincipal>()
-            val userId = principal?.payload?.getClaim("id")?.asInt()
+            val userId = principal?.payload?.subject?.toIntOrNull()
                 ?: return@post call.respond(HttpStatusCode.Unauthorized)
 
             val order = call.receive<Order>()
@@ -34,7 +34,7 @@ fun Route.orderRoutes(orderService: OrderService) {
         // GET /orders/user/{userId}
         get("/user/{userId}") {
             val principal = call.principal<JWTPrincipal>()
-            val tokenUserId = principal?.payload?.getClaim("id")?.asInt()
+            val tokenUserId = principal?.payload?.subject?.toIntOrNull()
             val tokenRole = principal?.payload?.getClaim("role")?.asString()
             val requestedUserId = call.parameters["userId"]?.toIntOrNull()
                 ?: return@get call.respond(HttpStatusCode.BadRequest, "Неверный ID")

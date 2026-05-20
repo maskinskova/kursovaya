@@ -33,18 +33,19 @@ fun Route.menuRoutes(menuService: MenuService) {
             call.respond(item)
         }
 
-        post {
-            // Только ADMIN
-            val principal = call.principal<JWTPrincipal>()
-            val role = principal?.payload?.getClaim("role")?.asString()
-            if (role != "ADMIN") {
-                call.respond(HttpStatusCode.Forbidden, "Требуется роль ADMIN")
-                return@post
-            }
+        authenticate("jwt") {
+            post {
+                val principal = call.principal<JWTPrincipal>()
+                val role = principal?.payload?.getClaim("role")?.asString()
+                if (role != "ADMIN") {
+                    call.respond(HttpStatusCode.Forbidden, "Требуется роль ADMIN")
+                    return@post
+                }
 
-            val item = call.receive<com.delivery.models.MenuItem>()
-            val created = menuService.addItem(item)
-            call.respond(HttpStatusCode.Created, created)
+                val item = call.receive<com.delivery.models.MenuItem>()
+                val created = menuService.addItem(item)
+                call.respond(HttpStatusCode.Created, created)
+            }
         }
     }
 }
